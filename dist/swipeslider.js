@@ -7,6 +7,8 @@
   $.fn.swipeslider = function (options) {
     var slideContainer = this;
     var slider = this.find('.sw-slides'); // reference to slider
+    var slides = slider.find('.sw-slide');
+    console.log(slides);
     var defaultSettings = {
       /**
       / How long one slide will change the other.
@@ -72,10 +74,11 @@
     * Set initial values.
     */
     (function init() {
-      $(slideContainer).css('padding-top', settings.sliderHeight);
-      
+      //$(slideContainer).css('padding-top', settings.sliderHeight);
+
       slidesWidth = slider.width();
-        
+      full_featureWidth = slideContainer.width();
+      $(slideContainer).css('height',full_featureWidth*0.35);
       // Change slide width when window changes.
       $(window).resize(resizeSlider);
           
@@ -158,7 +161,7 @@
       // If sliding started first time and there was a distance.
       if (slidingState == 1 && deltaSlide != 0) {
         slidingState = 2; // Set status to 'actually moving'
-        startPixelOffset = currentSlide * -slidesWidth; // Store current offset of slide
+        startPixelOffset = currentSlide * -slidesWidth + (full_featureWidth-slidesWidth)/2; // Store current offset of slide
       }
 
       //  When user move image
@@ -176,6 +179,7 @@
 
         // How far to translate slide while dragging.
         pixelOffset = startPixelOffset + deltaSlide / touchPixelRatio;
+        //console.log(startPixelOffset,deltaSlide,touchPixelRatio,pixelOffset);
         enableTransition(false);
         // Apply moving and remove animation class
         translateX(pixelOffset);
@@ -189,23 +193,21 @@
       if (slidingState == 2) {
         // Reset sliding state.
         slidingState = 0;
-
+        console.log( pixelOffset < startPixelOffset,currentSlide)
         // Calculate which slide need to be in view.
         currentSlide = pixelOffset < startPixelOffset ? currentSlide + 1 : currentSlide -1;
 
         // Make sure that unexisting slides weren't selected.
         currentSlide = Math.min(Math.max(currentSlide, 0), slideCount - 1);
-
+        console.log(currentSlide)
         // Since in this example slide is full viewport width offset can be calculated according to it.
-        pixelOffset = currentSlide * -slidesWidth;
+        //pixelOffset = currentSlide * -slidesWidth;
 
         disableSwipe();
         switchSlide();
         enableAutoPlay();
       }
-      
       slidingState = 0;
-
     } 
 
     /** 
@@ -248,7 +250,7 @@
     */
     function startAutoPlay() {
       if(allowSlideSwitch) {
-        animationDelayID = window.setTimeout(performAutoPlay, autoPlayTimeout);
+        //animationDelayID = window.setTimeout(performAutoPlay, autoPlayTimeout);
       }
     }
 
@@ -281,8 +283,14 @@
     */
     function switchSlide() {
       enableTransition(true);
-      translateX(-currentSlide * slidesWidth);
-      
+      console.log(currentSlide,slidesWidth);
+      //translateX(-currentSlide * slidesWidth);
+      if(currentSlide == 1){
+        translateX(-slidesWidth + (full_featureWidth-slidesWidth)/2);
+      }else{
+        console.log('run',-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
+        translateX(-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
+      }
       if(currentSlide == 0) {
         window.setTimeout(jumpToEnd, transitionDuration);
       } else if (currentSlide == slideCount - 1) {
@@ -306,7 +314,6 @@
     function jumpToEnd() {
       jumpToSlide(slideCount - 2);
     }
-
     /**
     * Switches slideshow to exact slide number.
     * Remark: respecting two slides that were added for smooth transaction effect.
@@ -314,7 +321,13 @@
     function jumpToSlide(slideNumber) {
       enableTransition(false);
       currentSlide = slideNumber;
-      translateX(-slidesWidth * currentSlide);
+      //console.log(currentSlide);
+      if(currentSlide == 1){
+        translateX(-slidesWidth  + (full_featureWidth-slidesWidth)/2);
+      }else{
+        translateX(-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
+      }
+
       window.setTimeout(returnTransitionAfterJump, 50);
     }
 
@@ -342,6 +355,7 @@
     * @param distance {Number} distance of transition. If negative, transition from right to left.
     */
     function translateX(distance) {
+      //console.log(1);
       slider
       // Prefixes are being set automatically.
   //      .css('-webkit-transform','translateX(' + distance + 'px)')
@@ -409,8 +423,10 @@
        
         if (i == 0) {
           bulletList.append('<li class="sw-slide-' + i + ' active"></li>');
+          slides.eq(i).children().css('width','100%');
         } else {
           bulletList.append('<li class="sw-slide-' + i + '"></li>');
+
         }
         
         var item = slideContainer.find('.sw-slide-' + i);
@@ -421,6 +437,7 @@
             // Disable autoplay on time of transition.
             disableAutoPlay();
             currentSlide = lockedIndex + 1;
+            console.log(currentSlide);
             switchSlide();
             enableAutoPlay();
           });
@@ -434,7 +451,6 @@
     */
     function setActiveBullet(number) {
       var activeBullet = 0;
-      
       if(number == 0) {
         activeBullet = slideCount - 3;
       } else if (number == slideCount - 1) {
@@ -442,11 +458,11 @@
       } else {
         activeBullet = number - 1;
       }
-      
       slideContainer.find('.sw-bullet').find('li').removeClass('active');
       slideContainer.find('.sw-slide-' + activeBullet).addClass('active');
+      slides.eq(activeBullet).children().css('width','100%');
+      slides.eq(activeBullet).siblings().children().css('width','70%');
     }
-
     return slideContainer;    
   }
 }(jQuery));

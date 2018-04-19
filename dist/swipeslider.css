@@ -2,7 +2,8 @@
   position: relative;
   overflow: hidden;
   display: block;
-  padding-top: 60%;
+  height: 256px;
+  /*padding-top: 60%;*/
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -11,28 +12,31 @@
     display: block;
     padding: 0;
     list-style: none;
-    width: 100%;
+    width: 70%;
     height: 100%;
     white-space: nowrap;
     font-size: 0;
-    -webkit-transform: translateX(0);
-            transform: translateX(0);
+
+    -webkit-transform: translateX(-560px);
+            transform: translateX(-560px);
     position: absolute;
     bottom: 0; }
   .swipslider .sw-slide {
+    box-sizing: border-box;
     width: 100%;
     height: 100%;
     margin: auto;
     display: inline-block;
-    position: relative; }
+    position: relative;
+  }
     .swipslider .sw-slide > img {
       position: absolute;
       top: 50%;
       left: 50%;
       -webkit-transform: translate(-50%, -50%);
               transform: translate(-50%, -50%);
-      max-height: 100%;
-      max-width: 100%;
+      height: auto;
+      width: 70%;
       margin-left: auto;
       margin-right: auto;
       -webkit-user-select: none;

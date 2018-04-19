@@ -27,10 +27,11 @@
 /* line 25, D:/Temp/github/swipeslider/style.scss */
 /*h2 {
   margin-top: 80px; }*/
-
+body{margin: 0px;padding: 0px;}
 .container{
   margin: 0 auto;
-  max-width: 640px;
+  max-width: 800px;
+  width: 100%;
 }
 
 /* line 30, D:/Temp/github/swipeslider/style.scss */
