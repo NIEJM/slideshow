@@ -8,7 +8,6 @@
     var slideContainer = this;
     var slider = this.find('.sw-slides'); // reference to slider
     var slides = slider.find('.sw-slide');
-    console.log(slides);
     var defaultSettings = {
       /**
       / How long one slide will change the other.
@@ -101,9 +100,9 @@
       
       if(swipe) {
         // Add event handlers to react when user swipe.
-        slider.on('mousedown touchstart', swipeStart);
-        $('html').on('mouseup touchend', swipeEnd);
-        $('html').on('mousemove touchmove', swiping);
+        slider.on(' touchstart', swipeStart);
+        $('html').on(' touchend', swipeEnd);
+        $('html').on(' touchmove', swiping);
       }
 
       // Jump to slide 1 (since another slide was added to the beginning of row);
@@ -126,10 +125,11 @@
     * @param event browser event object
     */
     function swipeStart(event) {
+
       if(!allowSwipe) {
         return;
       }
-
+      console.log(allowSwipe);
       disableAutoPlay();
       // If it is mobile device redefine event to first touch point
       if (event.originalEvent.touches)
@@ -189,17 +189,19 @@
     /** Triggers when user finishes swipe.
     * @param event browser event object
     */
+
     function swipeEnd(event) {
+      console.log(slidingState);
       if (slidingState == 2) {
         // Reset sliding state.
         slidingState = 0;
-        console.log( pixelOffset < startPixelOffset,currentSlide)
+        //console.log( pixelOffset < startPixelOffset,currentSlide);
         // Calculate which slide need to be in view.
         currentSlide = pixelOffset < startPixelOffset ? currentSlide + 1 : currentSlide -1;
 
         // Make sure that unexisting slides weren't selected.
         currentSlide = Math.min(Math.max(currentSlide, 0), slideCount - 1);
-        console.log(currentSlide)
+        //console.log(currentSlide)
         // Since in this example slide is full viewport width offset can be calculated according to it.
         //pixelOffset = currentSlide * -slidesWidth;
 
@@ -250,7 +252,7 @@
     */
     function startAutoPlay() {
       if(allowSlideSwitch) {
-        //animationDelayID = window.setTimeout(performAutoPlay, autoPlayTimeout);
+        animationDelayID = window.setTimeout(performAutoPlay, autoPlayTimeout);
       }
     }
 
@@ -283,12 +285,12 @@
     */
     function switchSlide() {
       enableTransition(true);
-      console.log(currentSlide,slidesWidth);
+      //console.log(currentSlide,slidesWidth);
       //translateX(-currentSlide * slidesWidth);
       if(currentSlide == 1){
         translateX(-slidesWidth + (full_featureWidth-slidesWidth)/2);
       }else{
-        console.log('run',-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
+        //console.log('run',-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
         translateX(-slidesWidth + (full_featureWidth-slidesWidth)/2 - slidesWidth * (currentSlide-1));
       }
       if(currentSlide == 0) {
